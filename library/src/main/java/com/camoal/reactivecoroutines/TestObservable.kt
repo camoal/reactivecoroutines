@@ -15,13 +15,21 @@ class TestObservable<T>(private val observable: ObservableSource<T>): TestObserv
 
     override fun assert(vararg values: T) {
 
+        testValues(values.toMutableList())
+    }
+
+    override fun assert(list: List<T>) {
+
+        testValues(list.toMutableList())
+    }
+
+    private fun testValues(list: MutableList<T>){
+
         val singleThreadContext = newSingleThreadContext("UI thread")
         Dispatchers.setMain(singleThreadContext)
 
         val latch = CountDownLatch(1)
         var error: Throwable? = null
-
-        val list = values.toMutableList()
 
         observable
             .subscribe(

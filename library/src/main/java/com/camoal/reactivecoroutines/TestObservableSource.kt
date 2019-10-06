@@ -9,4 +9,12 @@ interface TestObservableSource<T> {
      * @see java.lang.AssertionError
      */
     fun assert(vararg values: T)
+
+    /**
+     * Check if the values are correct and otherwise throw an AssertionError.
+     *
+     * @param list of values that are checked in the test.
+     * @see java.lang.AssertionError
+     */
+    fun assert(list: List<T>)
 }

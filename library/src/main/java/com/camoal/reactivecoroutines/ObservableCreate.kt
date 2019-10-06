@@ -1,6 +1,7 @@
 package com.camoal.reactivecoroutines
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.test.runBlockingTest
 import kotlin.coroutines.CoroutineContext
 
 
@@ -19,6 +20,7 @@ class ObservableCreate<T>(private val emitter: ObservableEmitter<T>) : Observabl
     private var retryTimes = 0
     private var repeatDelay: Long = 0
     private var repeat = false
+    private var test = false
 
     private var doOnSubscribeFunction: CompleteListener = {}
     private var doOnTerminateFunction: CompleteListener = {}
@@ -30,6 +32,7 @@ class ObservableCreate<T>(private val emitter: ObservableEmitter<T>) : Observabl
 
     override fun test(): TestObservableSource<T> {
 
+        test = true
         repeat = false
         retryTimes = 0
         retryWhenFuction = null
@@ -131,7 +134,10 @@ class ObservableCreate<T>(private val emitter: ObservableEmitter<T>) : Observabl
                     delay(repeatDelay)
                 }
                 withContext(observerDispatcher) { doOnSubscribeFunction() }
-                emitter()
+                when(test){
+                    true -> runBlockingTest { emitter() }
+                    false -> emitter()
+                }
             }
             catch (t: Throwable){
                 if(t !is CancellationException){
@@ -162,7 +168,7 @@ class ObservableCreate<T>(private val emitter: ObservableEmitter<T>) : Observabl
     }
 
     /**
-     * If the coroutina is active, the event is emitted.
+     * If the coroutine is active, the event is emitted.
      * Repeat the observable if necessary or finish the task.
      *
      * @param terminate indicates if the terminate task is executed. Default is true.
