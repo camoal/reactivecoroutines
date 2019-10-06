@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ReactiveCoroutines</string>
+    <string name="countdown_text">Press the button to start</string>
+    <string name="countdown_button">Start countdown</string>
+    <string name="countdown_start">Countdown started</string>
+    <string name="countdown_end">Countdown finished</string>
+</resources>
